@@ -11,7 +11,9 @@ type MochaSuiteInput = BaseTypes.TestSuiteOpts & {
 //projectBaseDir must contain package.json and be already built
 export default function makeMochaSuite(projectBaseDir: string,
 				       testPath: string, //rel to projectBaseDir
-				       opts: MochaSuiteInput) {
+				       opts: MochaSuiteInput)
+  : MochaSuite
+{
   return new MochaSuite(projectBaseDir, testPath, opts);
 }
 
