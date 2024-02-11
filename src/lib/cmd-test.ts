@@ -43,11 +43,7 @@ class CmdTest implements TestCase {
       const execOpts = makeExecOpts(opts);
       const { error, stdout, stderr } = await execCmd(cmd, execOpts);
       let output = '';
-      if (error) {
-	output += `**Error Code**: ${error.code}\n`;
-	output += error.message;
-	console.log(JSON.stringify(error, null, 2));
-      }
+      if (error) output += `**Error Code**: ${error.code}\n`;
       if (stdout) output += `### Standard Output\n${stdout}\n`;
       if (stderr) output += `### Standard Error\n${stderr}\n`;
       const mustFail = !!opts.mustFail;

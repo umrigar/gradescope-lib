@@ -24,11 +24,8 @@ class CmdTest {
             const execOpts = makeExecOpts(opts);
             const { error, stdout, stderr } = await execCmd(cmd, execOpts);
             let output = '';
-            if (error) {
+            if (error)
                 output += `**Error Code**: ${error.code}\n`;
-                output += error.message;
-                console.log(JSON.stringify(error, null, 2));
-            }
             if (stdout)
                 output += `### Standard Output\n${stdout}\n`;
             if (stderr)
