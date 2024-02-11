@@ -4,8 +4,8 @@ type MochaSuiteInput = BaseTypes.TestSuiteOpts & {};
 export default function makeMochaSuite(projectBaseDir: string, testPath: string, //rel to projectBaseDir
 opts: MochaSuiteInput): MochaSuite;
 declare class MochaSuite extends BaseTypes.TestSuite {
-    private readonly projectBaseDir;
-    private readonly testPath;
+    readonly projectBaseDir: string;
+    readonly testPath: string;
     constructor(projectBaseDir: string, testPath: string, opts: MochaSuiteInput);
     run(): Promise<Errors.Result<BaseTypes.TestCaseInfo[]>>;
 }

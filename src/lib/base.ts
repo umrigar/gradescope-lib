@@ -8,7 +8,7 @@ export type TestSuiteOpts = TestInputOpts & {
 };
 
 export class TestSuite {
-  private readonly testCases: TestCase[];
+  readonly testCases: TestCase[];
   readonly opts: TestSuiteOpts;
   constructor(testCases: TestCase[], opts: TestSuiteOpts) {
     this.testCases = testCases;

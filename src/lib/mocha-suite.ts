@@ -19,8 +19,8 @@ export default function makeMochaSuite(projectBaseDir: string,
 
 
 class MochaSuite extends BaseTypes.TestSuite {
-  private readonly projectBaseDir: string;
-  private readonly testPath: string;
+  readonly projectBaseDir: string;
+  readonly testPath: string;
   constructor(projectBaseDir: string, testPath: string, opts: MochaSuiteInput) {
     super(makeMochaTestCase(projectBaseDir, testPath, opts),  opts);
     this.projectBaseDir = projectBaseDir; this.testPath = testPath;

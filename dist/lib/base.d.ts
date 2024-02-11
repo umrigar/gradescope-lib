@@ -4,7 +4,7 @@ export type TestSuiteOpts = TestInputOpts & {
     abortOnFail?: boolean;
 };
 export declare class TestSuite {
-    private readonly testCases;
+    readonly testCases: TestCase[];
     readonly opts: TestSuiteOpts;
     constructor(testCases: TestCase[], opts: TestSuiteOpts);
     run(): Promise<Errors.Result<TestCaseInfo[]>>;
