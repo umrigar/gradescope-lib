@@ -56,6 +56,8 @@ class CmdTest {
                 name,
                 number: opts.number,
                 output,
+                stdout,
+                stderr,
             });
         }
         catch (err) {

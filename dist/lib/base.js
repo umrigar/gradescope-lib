@@ -10,7 +10,9 @@ export class TestSuite {
     async run() {
         const testCaseInfos = [];
         for (const testCase of this.testCases) {
-            const inputOpts = { ...DEFAULT_TEST_INPUT, ...this.opts };
+            const inputOpts = {
+                ...DEFAULT_TEST_INPUT, ...this.opts, ...testCase.opts,
+            };
             const millis = inputOpts.timeoutMillis;
             const result0 = await doTestCaseWithTimeout(testCase, inputOpts, millis);
             if (!result0.isOk)

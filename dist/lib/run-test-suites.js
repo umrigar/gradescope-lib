@@ -41,7 +41,7 @@ function makeGradescopeResults(output, testCaseInfos) {
     return {
         output,
         output_format: 'md',
-        stdout_visibility: 'visible',
+        stdout_visibility: 'after_published',
         tests: testCaseInfos,
     };
 }

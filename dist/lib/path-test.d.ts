@@ -6,7 +6,7 @@ type PathTestInput = TestInput & {
 export default function makePathTest(path: string, opts: PathTestInput): PathTest;
 declare class PathTest implements TestCase {
     private readonly path;
-    private readonly opts;
+    readonly opts: PathTestInput;
     constructor(path: string, opts: PathTestInput);
     run(suiteOpts: TestInputOpts): Promise<Errors.Result<TestCaseInfo>>;
 }

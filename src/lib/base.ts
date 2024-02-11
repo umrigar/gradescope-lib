@@ -18,7 +18,9 @@ export class TestSuite {
   async run() : Promise<Errors.Result<TestCaseInfo[]>> {
     const testCaseInfos: TestCaseInfo[] = [];
     for (const testCase of this.testCases) {
-      const inputOpts: TestSuiteOpts = {...DEFAULT_TEST_INPUT, ...this.opts};
+      const inputOpts: TestSuiteOpts = {
+	...DEFAULT_TEST_INPUT, ...this.opts, ...testCase.opts,
+      };
       const millis = inputOpts.timeoutMillis!;
       const result0 = await doTestCaseWithTimeout(testCase, inputOpts, millis);
       if (!result0.isOk) return result0;
@@ -55,6 +57,7 @@ async function doTestCaseWithTimeout(testCase: TestCase, opts: TestSuiteOpts,
 
 export interface TestCase {
 
+  readonly opts: TestInputOpts;
   run(suiteOpts: TestInputOpts) : Promise<Errors.Result<TestCaseInfo>>;
   
 }

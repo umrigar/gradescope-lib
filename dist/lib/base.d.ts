@@ -10,6 +10,7 @@ export declare class TestSuite {
     run(): Promise<Errors.Result<TestCaseInfo[]>>;
 }
 export interface TestCase {
+    readonly opts: TestInputOpts;
     run(suiteOpts: TestInputOpts): Promise<Errors.Result<TestCaseInfo>>;
 }
 export type GradescopeResults = {

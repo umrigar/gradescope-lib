@@ -15,7 +15,7 @@ export default function makePathTest(path: string, opts: PathTestInput) {
 
 class PathTest implements TestCase {
   private readonly path: string;
-  private readonly opts: PathTestInput;
+  readonly opts: PathTestInput;
   constructor(path: string, opts: PathTestInput) {
     this.path = path;
     this.opts = opts;

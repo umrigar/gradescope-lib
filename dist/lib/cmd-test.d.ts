@@ -12,7 +12,7 @@ type CmdTestInput = TestInput & {
 export default function makeCmdTest(cmd: string, opts: CmdTestInput): CmdTest;
 declare class CmdTest implements TestCase {
     private readonly cmd;
-    private readonly opts;
+    readonly opts: CmdTestInput;
     constructor(cmd: string, opts: CmdTestInput);
     run(suiteOpts: TestInputOpts): Promise<Errors.Result<TestCaseInfo>>;
 }

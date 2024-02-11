@@ -29,7 +29,7 @@ export default function makeCmdTest(cmd: string, opts: CmdTestInput) {
 
 class CmdTest implements TestCase {
   private readonly cmd: string;
-  private readonly opts: CmdTestInput;
+  readonly opts: CmdTestInput;
   constructor(cmd: string, opts: CmdTestInput) {
     this.cmd = cmd;
     this.opts = opts;
@@ -71,7 +71,9 @@ class CmdTest implements TestCase {
 	status,
 	name,
 	number: opts.number,
-	output,    
+	output,
+	stdout,
+	stderr,
       });
     }
     catch (err) {
