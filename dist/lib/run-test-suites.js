@@ -1,7 +1,7 @@
 import { Errors } from 'cs544-js-utils';
 export default async function runTestSuites(descr, suites) {
     const testCaseInfos = [];
-    let output = `# ${descr}`;
+    let output = `# ${descr}\n\n`;
     const results = {};
     let [nTotalAcc, nFailedAcc] = [0, 0];
     let abortSuite = '';

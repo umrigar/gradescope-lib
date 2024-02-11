@@ -16,7 +16,7 @@ runTestSuites(descr: string, suites: TestSuite[])
   : Promise<Errors.Result<GradescopeResults>>
 {
   const testCaseInfos : TestCaseInfo[] = [];
-  let output =  `# ${descr}`;
+  let output =  `# ${descr}\n\n`;
   const results: Record<string, SuiteCounts> = {};
   let [ nTotalAcc, nFailedAcc ] = [ 0, 0 ];
   let abortSuite = '';
