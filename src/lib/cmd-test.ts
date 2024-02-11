@@ -46,6 +46,7 @@ class CmdTest implements TestCase {
       if (error) {
 	output += `**Error Code**: ${error.code}\n`;
 	output += error.message;
+	console.log(JSON.stringify(error, null, 2));
       }
       if (stdout) output += `### Standard Output\n${stdout}\n`;
       if (stderr) output += `### Standard Error\n${stderr}\n`;

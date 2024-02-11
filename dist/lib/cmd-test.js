@@ -27,6 +27,7 @@ class CmdTest {
             if (error) {
                 output += `**Error Code**: ${error.code}\n`;
                 output += error.message;
+                console.log(JSON.stringify(error, null, 2));
             }
             if (stdout)
                 output += `### Standard Output\n${stdout}\n`;
