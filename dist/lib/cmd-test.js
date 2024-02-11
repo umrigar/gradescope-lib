@@ -24,15 +24,12 @@ class CmdTest {
             const execOpts = makeExecOpts(opts);
             const { error, stdout, stderr } = await execCmd(cmd, execOpts);
             let output = '';
-            if (error) {
-                output += `*error*: 
-          code ${error.code}; message: ${error.message}
-        `;
-            }
+            if (error)
+                output += `**Error Code**: ${error.code}\n`;
             if (stdout)
-                output += `*stdout*:\n${stdout}\n`;
+                output += `### Standard Output\n${stdout}\n`;
             if (stderr)
-                output += `*stderr*:\n${stderr}\n`;
+                output += `### Standard Error\n${stderr}\n`;
             const mustFail = !!opts.mustFail;
             const didError = (error !== undefined);
             let status = (mustFail === didError) ? 'passed' : 'failed';

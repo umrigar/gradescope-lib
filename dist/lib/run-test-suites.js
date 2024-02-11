@@ -7,6 +7,7 @@ export default async function runTestSuites(descr, suites) {
         let suiteName = 'UNKNOWN';
         try {
             suiteName = suite.opts.name;
+            output += `## ${suiteName}`;
             const suiteResult = await suite.run();
             if (!suiteResult.isOk)
                 return suiteResult;
@@ -34,24 +35,4 @@ function makeGradescopeResults(output, testCaseInfos) {
         tests: testCaseInfos,
     };
 }
-/*
-function errors<T>(result: Errors.Result<T>) {
-  if (result.isOk) return;
-  for (const err of result.errors) {
-    let msg = `${err.options.code}: ${err.message}`;
-    let opts = '';
-    for (const [k, v] of Object.entries(err.options)) {
-      if (k === 'code') continue;
-      opts += `${k}=${v}`;
-    }
-    if (opts.length > 0) msg += '; ' + opts;
-    console.error(msg);
-  }
-}
-
-function panic<T>(result: Errors.Result<T>) : never {
-  errors(result);
-  process.exit(1);
-}
-*/
 //# sourceMappingURL=run-test-suites.js.map
