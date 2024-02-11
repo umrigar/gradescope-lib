@@ -1,13 +1,12 @@
 import * as BaseTypes from './base.js';
 import { Errors } from 'cs544-js-utils';
-export declare const DEFAULT_TEST_PATH = "dist/grade-tests";
-type MochaSuiteInput = BaseTypes.TestSuiteOpts & {
-    testPath?: string;
-};
-export default function makeMochaSuite(projectBaseDir: string, opts: MochaSuiteInput): MochaSuite;
+type MochaSuiteInput = BaseTypes.TestSuiteOpts & {};
+export default function makeMochaSuite(projectBaseDir: string, testPath: string, //rel to projectBaseDir
+opts: MochaSuiteInput): MochaSuite;
 declare class MochaSuite extends BaseTypes.TestSuite {
     private readonly projectBaseDir;
-    constructor(projectBaseDir: string, opts: MochaSuiteInput);
+    private readonly testPath;
+    constructor(projectBaseDir: string, testPath: string, opts: MochaSuiteInput);
     run(): Promise<Errors.Result<BaseTypes.TestCaseInfo[]>>;
 }
 export {};

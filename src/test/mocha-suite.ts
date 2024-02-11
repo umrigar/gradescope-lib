@@ -15,7 +15,7 @@ describe('mocha suite tests', () => {
 
   it('must run all okay tests', async () => {
     const testPath = TEST_PATHS.ok;
-    const suite = makeMochaSuite(baseDir, { name: 'All Ok', testPath });
+    const suite = makeMochaSuite(baseDir, testPath, { name: 'All Ok' });
     const result = await suite.run();
     assert(result.isOk);
     expect(result.val.length).is.above(0);
@@ -24,7 +24,7 @@ describe('mocha suite tests', () => {
 
   it('must run all failed tests', async () => {
     const testPath = TEST_PATHS.fail;
-    const suite = makeMochaSuite(baseDir, { name: 'All Fail', testPath });
+    const suite = makeMochaSuite(baseDir, testPath, { name: 'All Fail' });
     const result = await suite.run();
     assert(result.isOk);
     expect(result.val.length).is.above(0);
@@ -33,7 +33,7 @@ describe('mocha suite tests', () => {
 
   it('must run mixed tests', async () => {
     const testPath = TEST_PATHS.mixed;
-    const suite = makeMochaSuite(baseDir, { name: 'Mixed Status', testPath });
+    const suite = makeMochaSuite(baseDir, testPath, { name: 'Mixed Status' });
     const result = await suite.run();
     assert(result.isOk);
     const oks = result.val.filter(info => info.status === 'passed');

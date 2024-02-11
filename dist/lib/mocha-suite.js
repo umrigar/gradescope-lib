@@ -1,16 +1,18 @@
 import makeCmdTest from './cmd-test.js';
 import * as BaseTypes from './base.js';
 import { Errors } from 'cs544-js-utils';
-export const DEFAULT_TEST_PATH = 'dist/grade-tests';
 //projectBaseDir must contain package.json and be already built
-export default function makeMochaSuite(projectBaseDir, opts) {
-    return new MochaSuite(projectBaseDir, opts);
+export default function makeMochaSuite(projectBaseDir, testPath, //rel to projectBaseDir
+opts) {
+    return new MochaSuite(projectBaseDir, testPath, opts);
 }
 class MochaSuite extends BaseTypes.TestSuite {
     projectBaseDir;
-    constructor(projectBaseDir, opts) {
-        super(makeMochaTestCase(projectBaseDir, opts), opts);
+    testPath;
+    constructor(projectBaseDir, testPath, opts) {
+        super(makeMochaTestCase(projectBaseDir, testPath, opts), opts);
         this.projectBaseDir = projectBaseDir;
+        this.testPath = testPath;
     }
     async run() {
         const superResult = await super.run();
@@ -22,7 +24,7 @@ class MochaSuite extends BaseTypes.TestSuite {
             mochaOut = JSON.parse(stdout);
         }
         catch (err) {
-            return Errors.errResult(`bad mocha JSON ${stdout}`);
+            return Errors.errResult(`bad JSON from mocha: ${err}\n${stdout}`);
         }
         const { tests, pending, failures } = mochaOut;
         const pendingTitles = new Set(pending.map(p => p.fullTitle));
@@ -55,8 +57,7 @@ class MochaSuite extends BaseTypes.TestSuite {
         return Errors.okResult(infos);
     }
 }
-function makeMochaTestCase(projectBaseDir, opts) {
-    const testPath = opts.testPath ?? DEFAULT_TEST_PATH;
+function makeMochaTestCase(projectBaseDir, testPath, opts) {
     const cmd = `cd ${projectBaseDir}; npx mocha --reporter json ${testPath}`;
     return [makeCmdTest(cmd, opts),];
 }

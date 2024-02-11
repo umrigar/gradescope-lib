@@ -5,24 +5,23 @@ import * as BaseTypes from './base.js';
 
 import { Errors } from 'cs544-js-utils';
 
-export const DEFAULT_TEST_PATH = 'dist/grade-tests';
-
 type MochaSuiteInput = BaseTypes.TestSuiteOpts & {
-  testPath?: string, //relative to projectBaseDir
 };
 
 //projectBaseDir must contain package.json and be already built
 export default function makeMochaSuite(projectBaseDir: string,
-				      opts: MochaSuiteInput) {
-  return new MochaSuite(projectBaseDir, opts);
+				       testPath: string, //rel to projectBaseDir
+				       opts: MochaSuiteInput) {
+  return new MochaSuite(projectBaseDir, testPath, opts);
 }
 
 
 class MochaSuite extends BaseTypes.TestSuite {
   private readonly projectBaseDir: string;
-  constructor(projectBaseDir: string, opts: MochaSuiteInput) {
-    super(makeMochaTestCase(projectBaseDir, opts),  opts);
-    this.projectBaseDir = projectBaseDir;
+  private readonly testPath: string;
+  constructor(projectBaseDir: string, testPath: string, opts: MochaSuiteInput) {
+    super(makeMochaTestCase(projectBaseDir, testPath, opts),  opts);
+    this.projectBaseDir = projectBaseDir; this.testPath = testPath;
   }
 
   async run() : Promise<Errors.Result<BaseTypes.TestCaseInfo[]>> {
@@ -40,7 +39,7 @@ class MochaSuite extends BaseTypes.TestSuite {
       mochaOut = JSON.parse(stdout);
     }
     catch (err) {
-      return Errors.errResult(`bad mocha JSON ${stdout}`);
+      return Errors.errResult(`bad JSON from mocha: ${err}\n${stdout}`);
     }
     const { tests, pending, failures } = mochaOut;
     const pendingTitles = new Set(pending.map(p => p.fullTitle! as string));
@@ -74,8 +73,9 @@ class MochaSuite extends BaseTypes.TestSuite {
   
 }
 
-function makeMochaTestCase(projectBaseDir: string, opts: MochaSuiteInput) {
-  const testPath = opts.testPath ?? DEFAULT_TEST_PATH;
+function makeMochaTestCase(projectBaseDir: string, testPath: string,
+			   opts: MochaSuiteInput)
+{
   const cmd = `cd ${projectBaseDir}; npx mocha --reporter json ${testPath}`;
   return [ makeCmdTest(cmd, opts), ];
 }
