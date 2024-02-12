@@ -119,6 +119,42 @@ async function doDiff(diffSpec: DiffSpec, opts: ExecOpts) {
   }
 }
 
+type CmdResult = {
+  stdout: string,
+  stderr: string,
+  error?: Record<string, any>,
+};
+
+function execCmd(cmd: string, execOpts: ExecOpts) : Promise<CmdResult> {
+  const opts = { shell: true, ...execOpts };
+  let stdout = '';
+  let stderr = '';
+  return new Promise((resolve, reject) => {
+    const child = child_process.spawn(cmd, opts);
+    child.on('exit', (code, signal) => {
+      if (code !== 0 || signal) {
+	resolve({ stdout, stderr, error: { code, signal} });
+      }
+      else {
+	resolve({stdout, stderr});
+      }
+    });
+    child.on('disconnect', () => {
+      console.error('got disconnected event');
+    });
+    child.on('close', () => {
+      //console.error('got close event');
+    });
+    child.on('error', (error) => {
+      console.error('got error event', error);
+      resolve({stderr, stdout, error});
+    });
+    child.stdout.on('data', (data) => stdout += data);
+    child.stderr.on('data', (data) => stderr += data);
+  });
+}
+
+/*
 async function execCmd(cmd: string, execOpts: ExecOpts) {
   let stdout, stderr, error;
   try {
@@ -130,5 +166,5 @@ async function execCmd(cmd: string, execOpts: ExecOpts) {
   }
   return { error, stderr, stdout, };
 }
-
+*/
 
