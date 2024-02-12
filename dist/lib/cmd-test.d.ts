@@ -8,6 +8,7 @@ type DiffSpec = {
 type CmdTestInput = TestInput & {
     mustFail?: boolean;
     diffSpecs?: DiffSpec[];
+    okOnSignal?: boolean;
 };
 export default function makeCmdTest(cmd: string, opts: CmdTestInput): CmdTest;
 declare class CmdTest implements TestCase {

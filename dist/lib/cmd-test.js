@@ -26,16 +26,18 @@ class CmdTest {
             let output = '';
             if (error) {
                 output += `**Error Code**: ${error.code ?? error.signal}\n`;
-                output += `${JSON.stringify(error, null, 2)}\n `;
+                if (error.signal) {
+                    output += `${JSON.stringify(error, null, 2)}\n `;
+                }
             }
             if (stdout)
                 output += `### Standard Output\n${stdout}\n`;
             if (stderr)
                 output += `### Standard Error\n${stderr}\n`;
             const mustFail = !!opts.mustFail;
-            const didError = (error !== undefined);
-            let status = (mustFail === didError) ? 'passed' : 'failed';
-            if (!mustFail && !didError) {
+            const isOk = (error === undefined) || (error.signal && opts.okOnSignal);
+            let status = (mustFail === !isOk) ? 'passed' : 'failed';
+            if (!mustFail && error === undefined) {
                 for (const diffSpec of (opts.diffSpecs ?? [])) {
                     const diffResult = await doDiff(diffSpec, execOpts);
                     if (!diffResult.isOk) {

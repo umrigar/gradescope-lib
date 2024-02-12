@@ -18,8 +18,9 @@ type DiffSpec = {
   label?: string,
 };
 type CmdTestInput = TestInput & {
-  mustFail?: boolean,      //command must fail for test to succeed
-  diffSpecs?: DiffSpec[],  //paths to be diff'd
+  mustFail?: boolean,         //command must fail for test to succeed
+  diffSpecs?: DiffSpec[],     //paths to be diff'd
+  okOnSignal?: boolean,       //if error with signal, then passed
 };
 
 export default function makeCmdTest(cmd: string, opts: CmdTestInput) {
@@ -45,14 +46,16 @@ class CmdTest implements TestCase {
       let output = '';
       if (error) {
 	output += `**Error Code**: ${error.code ?? error.signal}\n`;
-	output += `${JSON.stringify(error, null, 2)}\n `;
+	if (error.signal) {
+	  output += `${JSON.stringify(error, null, 2)}\n `;
+	}
       }
       if (stdout) output += `### Standard Output\n${stdout}\n`;
       if (stderr) output += `### Standard Error\n${stderr}\n`;
       const mustFail = !!opts.mustFail;
-      const didError = (error !== undefined);
-      let status: Status = (mustFail === didError) ? 'passed' : 'failed';
-      if (!mustFail && !didError) {
+      const isOk = (error === undefined) || (error.signal && opts.okOnSignal);
+      let status: Status = (mustFail === !isOk) ? 'passed' : 'failed';
+      if (!mustFail && error === undefined) {
 	for (const diffSpec of (opts.diffSpecs ?? [])) {
 	  const diffResult = await doDiff(diffSpec, execOpts);
 	  if (!diffResult.isOk) {
