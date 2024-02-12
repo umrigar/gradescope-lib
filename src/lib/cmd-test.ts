@@ -20,7 +20,6 @@ type DiffSpec = {
 type CmdTestInput = TestInput & {
   mustFail?: boolean,         //command must fail for test to succeed
   diffSpecs?: DiffSpec[],     //paths to be diff'd
-  okOnSignal?: boolean,       //if error with signal, then passed
 };
 
 export default function makeCmdTest(cmd: string, opts: CmdTestInput) {
@@ -38,7 +37,7 @@ class CmdTest implements TestCase {
 
   async run(suiteOpts: TestInputOpts) : Promise<Errors.Result<TestCaseInfo>> {
     const cmd = this.cmd;
-    const opts = this.opts;
+    const opts = { ...suiteOpts, ...this.opts };
     const name =  opts.name;
     try {
       const execOpts = makeExecOpts(opts);
@@ -53,7 +52,7 @@ class CmdTest implements TestCase {
       if (stdout) output += `### Standard Output\n${stdout}\n`;
       if (stderr) output += `### Standard Error\n${stderr}\n`;
       const mustFail = !!opts.mustFail;
-      const isOk = (error === undefined) || (error.signal && opts.okOnSignal);
+      const isOk = (error === undefined);
       let status: Status = (mustFail === !isOk) ? 'passed' : 'failed';
       if (!mustFail && error === undefined) {
 	for (const diffSpec of (opts.diffSpecs ?? [])) {
@@ -125,6 +124,19 @@ type CmdResult = {
   error?: Record<string, any>,
 };
 
+async function execCmd(cmd: string, execOpts: ExecOpts) {
+  let stdout, stderr, error;
+  try {
+    ({ stdout, stderr } = await exec(cmd, execOpts));
+  }
+  catch (err) {
+    error = err;
+    ({ stdout, stderr } = err);    
+  }
+  return { error, stderr, stdout, };
+}
+
+/*
 function execCmd(cmd: string, execOpts: ExecOpts) : Promise<CmdResult> {
   const opts = { shell: true, ...execOpts };
   let stdout = '';
@@ -153,18 +165,8 @@ function execCmd(cmd: string, execOpts: ExecOpts) : Promise<CmdResult> {
     child.stderr.on('data', (data) => stderr += data);
   });
 }
-
-/*
-async function execCmd(cmd: string, execOpts: ExecOpts) {
-  let stdout, stderr, error;
-  try {
-    ({ stdout, stderr } = await exec(cmd, execOpts));
-  }
-  catch (err) {
-    error = err;
-    ({ stdout, stderr } = err);    
-  }
-  return { error, stderr, stdout, };
-}
 */
+
+
+
 
