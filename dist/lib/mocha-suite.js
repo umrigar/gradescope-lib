@@ -44,7 +44,14 @@ class MochaSuite extends BaseTypes.TestSuite {
                         ? 'failed'
                         : 'passed';
                 if (test.err.message)
-                    output += test.err.message;
+                    output += `*Message*: ${test.err.message}\n`;
+                if (test.err.actual)
+                    output += `*Actual*: \`${test.err.actual}\`\n`;
+                if (test.err.expected) {
+                    output += `*Expected*: \`${test.err.expected}\`\n`;
+                }
+                if (test.err.stack)
+                    output += `*Stack*:\n ${test.err.stack}\n`;
                 if (statusDetails === 'skipped')
                     output += `**Skipped**\n `;
                 infos.push({ score: 0.0,
