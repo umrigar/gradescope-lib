@@ -76,7 +76,9 @@ class MochaSuite extends BaseTypes.TestSuite {
 	infos.push({ score: 0.0,
 		     name: title,
 		     status: statusDetails === 'passed' ? 'passed' : 'failed',
-		     output
+		     output_format: 'md',
+		     output,
+		     extra_data: { test },
 		   });
       }
     }
