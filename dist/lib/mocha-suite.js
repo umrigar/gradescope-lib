@@ -59,7 +59,7 @@ class MochaSuite extends BaseTypes.TestSuite {
                     status: statusDetails === 'passed' ? 'passed' : 'failed',
                     output_format: 'md',
                     output,
-                    extra_data: { test },
+                    extra_data: { mochaTest: test },
                 });
             }
         }
