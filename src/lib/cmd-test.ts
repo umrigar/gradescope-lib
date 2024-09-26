@@ -19,6 +19,7 @@ type DiffSpec = {
 };
 type CmdTestInput = TestInput & {
   mustFail?: boolean,         //command must fail for test to succeed
+  stderrMustBeEmpty?: boolean,//stderr must be empty for test to succeed
   diffSpecs?: DiffSpec[],     //paths to be diff'd
 };
 
@@ -50,9 +51,13 @@ class CmdTest implements TestCase {
 	}
       }
       if (stdout) output += `### Standard Output\n${stdout}\n`;
-      if (stderr) output += `### Standard Error\n${stderr}\n`;
+      let stderrFailed = false;
+      if (stderr) {
+	output += `### Standard Error\n${stderr}\n`;
+	stderrFailed = !!opts.stderrMustBeEmpty;
+      }
       const mustFail = !!opts.mustFail;
-      const isOk = (error === undefined);
+      const isOk = (error === undefined) && !stderrFailed;
       let status: Status = (mustFail === !isOk) ? 'passed' : 'failed';
       if (!mustFail && error === undefined) {
 	for (const diffSpec of (opts.diffSpecs ?? [])) {

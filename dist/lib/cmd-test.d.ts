@@ -7,6 +7,7 @@ type DiffSpec = {
 };
 type CmdTestInput = TestInput & {
     mustFail?: boolean;
+    stderrMustBeEmpty?: boolean;
     diffSpecs?: DiffSpec[];
 };
 export default function makeCmdTest(cmd: string, opts: CmdTestInput): CmdTest;

@@ -32,10 +32,13 @@ class CmdTest {
             }
             if (stdout)
                 output += `### Standard Output\n${stdout}\n`;
-            if (stderr)
+            let stderrFailed = false;
+            if (stderr) {
                 output += `### Standard Error\n${stderr}\n`;
+                stderrFailed = !!opts.stderrMustBeEmpty;
+            }
             const mustFail = !!opts.mustFail;
-            const isOk = (error === undefined);
+            const isOk = (error === undefined) && !stderrFailed;
             let status = (mustFail === !isOk) ? 'passed' : 'failed';
             if (!mustFail && error === undefined) {
                 for (const diffSpec of (opts.diffSpecs ?? [])) {
