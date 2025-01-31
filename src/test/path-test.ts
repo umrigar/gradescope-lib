@@ -37,6 +37,26 @@ describe('path tests', () => {
     expect(result.val.status).to.equal('failed');
   });
 
+  it('must succeed with score for required existing file', async () => {
+    const score = 20;
+    const test =
+      makeTest(thisFilePath(), { name: 'required file', max_score: score,  });
+    const result = await test.run({});
+    assert(result.isOk);  
+    expect(result.val.status).to.equal('passed');
+    expect(result.val.score).to.equal(score);
+  });
+ 
+  it('must fail with score 0 for forbidden existing file', async () => { 
+    const score = 20;
+    const opts = { name: 'existing file', isForbidden: true, max_score: score };
+    const test = makeTest(thisFilePath(), opts); 
+    const result = await test.run({});
+    assert(result.isOk);
+    expect(result.val.status).to.equal('failed');
+    expect(result.val.score).to.equal(0);
+  });
+
 });
 
 function thisFilePath() {

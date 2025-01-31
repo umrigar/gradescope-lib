@@ -1,12 +1,12 @@
 {
   "name": "gradescope-lib",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
     "clean": "shx rm -rf dist",
     "build": "tsc",
-    "postbuild": "shx chmod a+x dist/index.js",
+    "_postbuild": "shx chmod a+x dist/index.js",
     "watch": "tsc --watch",
     "pretest": "npm run build",
     "test": "mocha --reporter-options maxDiffSize=128000 dist/test",

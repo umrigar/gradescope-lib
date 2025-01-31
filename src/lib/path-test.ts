@@ -33,7 +33,7 @@ class PathTest implements TestCase {
       const existsStr = exists ? 'exists' : 'does not exist';
       let output = `${prefix} \`${path}\` ${existsStr}`;
       return Errors.okResult({
-	score: 0.0,
+	score: isOk ? (opts.max_score ?? 0.0) : 0.0,
 	status: isOk ? 'passed' : 'failed',
 	name,
 	number: opts.number,

@@ -26,7 +26,7 @@ class LogLinesSuite extends BaseTypes.TestSuite {
             const name = (m && m[1]) ?? '';
             const isFailed = !okRe.test(line);
             const info = {
-                score: 0.0,
+                score: (status == 'passed') ? (this.opts.max_score ?? 0.0) : 0.0,
                 name: name,
                 status: isFailed ? 'failed' : 'passed',
                 output_format: 'md',

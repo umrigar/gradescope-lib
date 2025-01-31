@@ -40,6 +40,45 @@ describe('command tests without diffs', () => {
     expect(result.val.status).to.equal('passed');
   });
 
+  it('must succeed with score for running ls command', async () => {
+    const score = 20;
+    const test = makeTest('ls', { name: 'ls', max_score: score, });
+    const result = await test.run({});
+    assert(result.isOk); 
+    expect(result.val.score).to.equal(score);
+    expect(result.val.output).to.not.have.length(0);
+  });
+
+  it('must fail for running ls command with expected failure', async () => {
+    const score = 20;
+    const test =
+      makeTest('ls', { name: 'ls', mustFail: true, max_score: score});
+    const result = await test.run({});
+    assert(result.isOk);
+    expect(result.val.status).to.equal('failed');
+    expect(result.val.score).to.equal(0);
+    expect(result.val.output).to.not.have.length(0);
+  });
+
+  it('must fail for running false command', async () => {
+    const score = 20;
+    const test = makeTest('false', { name: 'false', max_score: score, });
+    const result = await test.run({});
+    assert(result.isOk);
+    expect(result.val.status).to.equal('failed');
+    expect(result.val.score).to.equal(0);
+  });
+
+  it('must succeed for false command with expected failure', async () => {
+    const score = 20;
+    const test = makeTest('false',{ name: 'false to fail', mustFail: true,
+				    max_score: score, });
+    const result = await test.run({});
+    assert(result.isOk);
+    expect(result.val.status).to.equal('passed');
+    expect(result.val.score).to.equal(score);
+  });
+
 
 });
 

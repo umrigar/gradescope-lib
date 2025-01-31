@@ -77,7 +77,7 @@ class CmdTest implements TestCase {
 	}
       }
       return Errors.okResult({
-	score: 0.0,
+	score: (status == 'passed') ? (opts.max_score ?? 0.0) : 0.0,
 	status,
 	name,
 	number: opts.number,

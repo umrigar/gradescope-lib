@@ -73,7 +73,9 @@ class MochaSuite extends BaseTypes.TestSuite {
 	}
 	if (test.err.stack) output += `**Stack**:\n ${test.err.stack}\n`;
 	if (statusDetails === 'skipped') output += `**Skipped**\n `;
-	infos.push({ score: 0.0,
+	const score =
+	  (statusDetails == 'passed') ? (this.opts.max_score ?? 0.0) : 0.0;
+	infos.push({ score, 
 		     name: title,
 		     status: statusDetails === 'passed' ? 'passed' : 'failed',
 		     output_format: 'md',
