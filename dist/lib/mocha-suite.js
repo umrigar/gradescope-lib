@@ -1,6 +1,6 @@
 import makeCmdTest from './cmd-test.js';
 import * as BaseTypes from './base.js';
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 //projectBaseDir must contain package.json and be already built
 export default function makeMochaSuite(projectBaseDir, testPath, //rel to projectBaseDir
 opts) {
@@ -24,7 +24,7 @@ class MochaSuite extends BaseTypes.TestSuite {
             mochaOut = JSON.parse(stdout);
         }
         catch (err) {
-            return Errors.errResult(`bad JSON from mocha: ${err}\n${stdout}`);
+            return E.errResult(E.Err.err(`bad JSON from mocha: ${err}\n${stdout}`));
         }
         const { tests, pending, failures } = mochaOut;
         const pendingTitles = new Set(pending.map(p => p.fullTitle));
@@ -64,7 +64,7 @@ class MochaSuite extends BaseTypes.TestSuite {
                 });
             }
         }
-        return Errors.okResult(infos);
+        return E.okResult(infos);
     }
 }
 function makeMochaTestCase(projectBaseDir, testPath, opts) {

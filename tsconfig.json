@@ -6,7 +6,7 @@
     "module": "es2022",
     "moduleResolution": "node",
     "lib": [
-      "es2023", "dom", "dom.iterable",
+      "esnext", "dom", "dom.iterable",
     ],
     "baseUrl": ".",
     "target": "esnext",

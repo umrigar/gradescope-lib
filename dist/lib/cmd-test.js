@@ -1,7 +1,7 @@
 import fs from 'fs';
 import child_process from 'child_process';
 import util from 'util';
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 const promisify = util.promisify;
 const exec = promisify(child_process.exec);
 const readFile = promisify(fs.readFile);
@@ -45,8 +45,8 @@ class CmdTest {
                     const diffResult = await doDiff(diffSpec, execOpts);
                     if (!diffResult.isOk) {
                         status = 'failed';
-                        const err = diffResult.errors[0];
-                        if (err.options.code === 'DIFF') {
+                        const err = diffResult.err;
+                        if (err.code === 'DIFF') {
                             output += `diff ${diffSpec.label ?? ''}\n`;
                             output += err.options.diff;
                         }
@@ -57,7 +57,7 @@ class CmdTest {
                     }
                 }
             }
-            return Errors.okResult({
+            return E.okResult({
                 score: (status == 'passed') ? (opts.max_score ?? 0.0) : 0.0,
                 status,
                 name,
@@ -68,7 +68,7 @@ class CmdTest {
             });
         }
         catch (err) {
-            return Errors.errResult(`error running test ${name}: ${err}`);
+            return E.errResult(E.Err.err(`error running test ${name}: ${err}`));
         }
     }
 }
@@ -84,18 +84,18 @@ async function doDiff(diffSpec, opts) {
     const { error, stdout, stderr } = await execCmd(cmd, opts);
     if (error) {
         if (error.code == 1) {
-            const err = Errors.errResult('diff', { code: 'DIFF', diff: stdout });
-            return err;
+            const err = E.Err.err('diff', 'DIFF', { diff: stdout });
+            return E.errResult(err);
         }
         else {
             const msg = `cannot exec \`${cmd}\`: ${error.message}`;
-            return Errors.errResult(msg, 'ERR');
+            return E.errResult(E.Err.err(msg, 'ERR'));
         }
     }
     else {
         console.assert(stdout === '');
         console.assert(stderr === '');
-        return Errors.VOID_RESULT;
+        return E.okResult(undefined);
     }
 }
 async function execCmd(cmd, execOpts) {

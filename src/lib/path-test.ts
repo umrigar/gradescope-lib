@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { TestInput, TestInputOpts, TestCase, TestCaseInfo, } from './base.js';
 
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 
 type PathTestInput = TestInput & {
   isForbidden?: boolean, //path cannot exist
@@ -21,7 +21,7 @@ class PathTest implements TestCase {
     this.opts = opts;
   }
 
-  async run(suiteOpts: TestInputOpts) : Promise<Errors.Result<TestCaseInfo>> {
+  async run(suiteOpts: TestInputOpts) : Promise<E.Result<TestCaseInfo, E.Err>> {
     const path = this.path;
     const opts = {...suiteOpts, ...this.opts };
     const name =  opts.name ?? `Checking for path ${path} in submission...`;
@@ -32,7 +32,7 @@ class PathTest implements TestCase {
       const prefix = isForbidden ? 'Forbidden path' : 'Required path';
       const existsStr = exists ? 'exists' : 'does not exist';
       let output = `${prefix} \`${path}\` ${existsStr}`;
-      return Errors.okResult({
+      return E.okResult({
 	score: isOk ? (opts.max_score ?? 0.0) : 0.0,
 	status: isOk ? 'passed' : 'failed',
 	name,
@@ -41,7 +41,7 @@ class PathTest implements TestCase {
       });
     }
     catch (err) {
-      return Errors.errResult(`error running test ${name}: ${err}`);
+      return E.errResult(E.Err.err(`error running test ${name}: ${err}`));
     }
   }
   

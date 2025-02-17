@@ -1,5 +1,5 @@
 //set up for specific gradescope output
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 export class TestSuite {
     testCases;
     opts;
@@ -20,17 +20,19 @@ export class TestSuite {
             const result = { ...inputOpts, ...result0.val };
             testCaseInfos.push(result);
         }
-        return Errors.okResult(testCaseInfos);
+        return E.okResult(testCaseInfos);
     }
 }
 ;
 async function doTestCaseWithTimeout(testCase, opts, timeoutMillis) {
+    //should be ReturnType<typeof setTimeout>, but ts insisting on number
+    //when third argument passed to setTimeout()
     let timer;
     try {
         const testPromise = new Promise(async (resolve) => resolve(await testCase.run(opts)));
         const timeoutPromise = new Promise(resolve => {
             const timeoutMsg = `timeout of ${timeoutMillis} millis exceeded running ${opts.name}`;
-            const timeoutError = Errors.errResult(timeoutMsg);
+            const timeoutError = E.errResult(timeoutMsg);
             timer = setTimeout(resolve, timeoutMillis, timeoutError);
         });
         return await Promise.race([testPromise, timeoutPromise]);

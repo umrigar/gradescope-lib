@@ -3,7 +3,7 @@ import fs from 'fs';
 import makeCmdTest from './cmd-test.js';
 import * as BaseTypes from './base.js';
 
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 
 type LogLinesSuiteInput = BaseTypes.TestSuiteOpts & {
   ignoreRe?: RegExp,  // skip line if this matches
@@ -27,7 +27,7 @@ class LogLinesSuite extends BaseTypes.TestSuite {
     this.opts = opts;
   }
 
-  async run() : Promise<Errors.Result<BaseTypes.TestCaseInfo[]>> {
+  async run() : Promise<E.Result<BaseTypes.TestCaseInfo[], E.Err>> {
     const { ignoreRe, matchRe, nameRe, okRe } = this.opts;
     const superResult = await super.run();
     if (!superResult.isOk) return superResult;
@@ -37,19 +37,22 @@ class LogLinesSuite extends BaseTypes.TestSuite {
       if (ignoreRe && ignoreRe.test(line)) continue;
       if (matchRe && !matchRe.test(line)) continue;
       const m = line.match(nameRe);
-      const name = (m && m[1]) ?? '';
+      let name = (m && m[1]) ?? '';
       const isFailed = !okRe.test(line);
-      const status = isFailed ? 'failed' : 'passed';      
+      const status = isFailed ? 'failed' : 'passed';
+      const maxScore = (this.opts.max_score ?? 0.0);
+      const score = (status == 'passed') ? maxScore : 0.0;
+      if (maxScore > 0) name += ` (${score}/${maxScore})`;
       const info: BaseTypes.TestCaseInfo = {
-	score: (status == 'passed') ? (this.opts.max_score ?? 0.0) : 0.0,
 	name: name,
+	score,
 	status,
 	output_format: 'md',
 	output: line,
       };
       infos.push(info);
     }
-    return Errors.okResult(infos);
+    return E.okResult(infos);
   }
   
 }

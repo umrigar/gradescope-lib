@@ -1,4 +1,4 @@
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 export type TestSuiteOpts = TestInputOpts & {
     name: string;
     abortOnFail?: boolean;
@@ -7,11 +7,11 @@ export declare class TestSuite {
     readonly testCases: TestCase[];
     readonly opts: TestSuiteOpts;
     constructor(testCases: TestCase[], opts: TestSuiteOpts);
-    run(): Promise<Errors.Result<TestCaseInfo[]>>;
+    run(): Promise<E.Result<TestCaseInfo[], E.Err>>;
 }
 export interface TestCase {
     readonly opts: TestInputOpts;
-    run(suiteOpts: TestInputOpts): Promise<Errors.Result<TestCaseInfo>>;
+    run(suiteOpts: TestInputOpts): Promise<E.Result<TestCaseInfo, E.Err>>;
 }
 export type GradescopeResults = {
     output: string;

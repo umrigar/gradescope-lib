@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 export default function makePathTest(path, opts) {
     return new PathTest(path, opts);
 }
@@ -21,7 +21,7 @@ class PathTest {
             const prefix = isForbidden ? 'Forbidden path' : 'Required path';
             const existsStr = exists ? 'exists' : 'does not exist';
             let output = `${prefix} \`${path}\` ${existsStr}`;
-            return Errors.okResult({
+            return E.okResult({
                 score: isOk ? (opts.max_score ?? 0.0) : 0.0,
                 status: isOk ? 'passed' : 'failed',
                 name,
@@ -30,7 +30,7 @@ class PathTest {
             });
         }
         catch (err) {
-            return Errors.errResult(`error running test ${name}: ${err}`);
+            return E.errResult(E.Err.err(`error running test ${name}: ${err}`));
         }
     }
 }

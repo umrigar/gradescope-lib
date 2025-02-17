@@ -1,5 +1,5 @@
 import { TestInput, TestInputOpts, TestCase, TestCaseInfo } from './base.js';
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 type DiffSpec = {
     expectedPath: string;
     actualPath: string;
@@ -15,7 +15,7 @@ declare class CmdTest implements TestCase {
     private readonly cmd;
     readonly opts: CmdTestInput;
     constructor(cmd: string, opts: CmdTestInput);
-    run(suiteOpts: TestInputOpts): Promise<Errors.Result<TestCaseInfo>>;
+    run(suiteOpts: TestInputOpts): Promise<E.Result<TestCaseInfo, E.Err>>;
 }
 export {};
 //# sourceMappingURL=cmd-test.d.ts.map

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Path from 'path';
 
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 
 import { TestSuite, TestCase, TestCaseInfo, GradescopeResults,
 	 OutputFormat, Visibility,
@@ -13,7 +13,7 @@ import { TestSuite, TestCase, TestCaseInfo, GradescopeResults,
 type SuiteCounts = { nTotal: number, nFailed: number };
 export default async function
 runTestSuites(descr: string, suites: TestSuite[])
-  : Promise<Errors.Result<GradescopeResults>>
+  : Promise<E.Result<GradescopeResults, E.Err>>
 {
   const testCaseInfos : TestCaseInfo[] = [];
   let output =  `# ${descr}\n\n`;
@@ -40,7 +40,8 @@ runTestSuites(descr: string, suites: TestSuite[])
       }
     }
     catch (err) {
-      return Errors.errResult(`error running testsuite ${suiteName}: ${err}`);
+      const msg = `error running testsuite ${suiteName}: ${err}`;
+      return E.errResult(E.Err.err(msg));
     }
   }
   output += `**Total**: ${nFailedAcc}/${nTotalAcc} failures \n`;
@@ -48,7 +49,7 @@ runTestSuites(descr: string, suites: TestSuite[])
     output += `tests aborted on failing test suite ${abortSuite}`;
   }
   const gradescopeResults = makeGradescopeResults(output, testCaseInfos);
-  return Errors.okResult(gradescopeResults);
+  return E.okResult(gradescopeResults);
 }
 
 function

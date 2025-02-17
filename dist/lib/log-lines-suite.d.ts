@@ -1,5 +1,5 @@
 import * as BaseTypes from './base.js';
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 type LogLinesSuiteInput = BaseTypes.TestSuiteOpts & {
     ignoreRe?: RegExp;
     matchRe?: RegExp;
@@ -10,7 +10,7 @@ export default function makeLogLinesSuite(cmd: string, opts: LogLinesSuiteInput)
 declare class LogLinesSuite extends BaseTypes.TestSuite {
     readonly opts: LogLinesSuiteInput;
     constructor(cmd: string, opts: LogLinesSuiteInput);
-    run(): Promise<Errors.Result<BaseTypes.TestCaseInfo[]>>;
+    run(): Promise<E.Result<BaseTypes.TestCaseInfo[], E.Err>>;
 }
 export {};
 //# sourceMappingURL=log-lines-suite.d.ts.map

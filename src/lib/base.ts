@@ -1,6 +1,6 @@
 //set up for specific gradescope output
 
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 
 export type TestSuiteOpts = TestInputOpts & {
   name: string,
@@ -15,7 +15,7 @@ export class TestSuite {
     this.opts = opts;
   }
 
-  async run() : Promise<Errors.Result<TestCaseInfo[]>> {
+  async run() : Promise<E.Result<TestCaseInfo[], E.Err>> {
     const testCaseInfos: TestCaseInfo[] = [];
     for (const testCase of this.testCases) {
       const inputOpts: TestSuiteOpts = {
@@ -27,7 +27,7 @@ export class TestSuite {
       const result = { ...inputOpts, ...result0.val };
       testCaseInfos.push(result);
     }
-    return Errors.okResult(testCaseInfos);
+    return E.okResult(testCaseInfos);
   }
   
   
@@ -35,17 +35,19 @@ export class TestSuite {
 
 async function doTestCaseWithTimeout(testCase: TestCase, opts: TestSuiteOpts,
 				     timeoutMillis: number)
-  : Promise<Errors.Result<TestCaseInfo>>
+  : Promise<E.Result<TestCaseInfo, E.Err>>
 {
-  let timer: ReturnType<typeof setTimeout>;
+  //should be ReturnType<typeof setTimeout>, but ts insisting on number
+  //when third argument passed to setTimeout()
+  let timer: number; 
   try {
-    const testPromise: Promise<Errors.Result<TestCaseInfo>> =
+    const testPromise: Promise<E.Result<TestCaseInfo, E.Err>> =
       new Promise(async (resolve) => resolve(await testCase.run(opts)));
-    const timeoutPromise: Promise<Errors.Result<TestCaseInfo>> =
+    const timeoutPromise: Promise<E.Result<TestCaseInfo, E.Err>> =
       new Promise(resolve => {
 	const timeoutMsg =
 	  `timeout of ${timeoutMillis} millis exceeded running ${opts.name}`;	
-	const timeoutError = Errors.errResult(timeoutMsg);
+	const timeoutError = E.errResult(timeoutMsg);
    	timer = setTimeout(resolve, timeoutMillis, timeoutError);
       });
     return await Promise.race([testPromise, timeoutPromise]);
@@ -58,7 +60,7 @@ async function doTestCaseWithTimeout(testCase: TestCase, opts: TestSuiteOpts,
 export interface TestCase {
 
   readonly opts: TestInputOpts;
-  run(suiteOpts: TestInputOpts) : Promise<Errors.Result<TestCaseInfo>>;
+  run(suiteOpts: TestInputOpts) : Promise<E.Result<TestCaseInfo, E.Err>>;
   
 }
 

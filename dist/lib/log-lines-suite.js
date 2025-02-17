@@ -1,6 +1,6 @@
 import makeCmdTest from './cmd-test.js';
 import * as BaseTypes from './base.js';
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 export default function makeLogLinesSuite(cmd, opts) {
     return new LogLinesSuite(cmd, opts);
 }
@@ -23,19 +23,23 @@ class LogLinesSuite extends BaseTypes.TestSuite {
             if (matchRe && !matchRe.test(line))
                 continue;
             const m = line.match(nameRe);
-            const name = (m && m[1]) ?? '';
+            let name = (m && m[1]) ?? '';
             const isFailed = !okRe.test(line);
             const status = isFailed ? 'failed' : 'passed';
+            const maxScore = (this.opts.max_score ?? 0.0);
+            const score = (status == 'passed') ? maxScore : 0.0;
+            if (maxScore > 0)
+                name += ` (${score}/${maxScore})`;
             const info = {
-                score: (status == 'passed') ? (this.opts.max_score ?? 0.0) : 0.0,
                 name: name,
+                score,
                 status,
                 output_format: 'md',
                 output: line,
             };
             infos.push(info);
         }
-        return Errors.okResult(infos);
+        return E.okResult(infos);
     }
 }
 function makeLogLinesTestCase(cmd, opts) {

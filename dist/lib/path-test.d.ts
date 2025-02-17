@@ -1,5 +1,5 @@
 import { TestInput, TestInputOpts, TestCase, TestCaseInfo } from './base.js';
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 type PathTestInput = TestInput & {
     isForbidden?: boolean;
 };
@@ -8,7 +8,7 @@ declare class PathTest implements TestCase {
     private readonly path;
     readonly opts: PathTestInput;
     constructor(path: string, opts: PathTestInput);
-    run(suiteOpts: TestInputOpts): Promise<Errors.Result<TestCaseInfo>>;
+    run(suiteOpts: TestInputOpts): Promise<E.Result<TestCaseInfo, E.Err>>;
 }
 export {};
 //# sourceMappingURL=path-test.d.ts.map

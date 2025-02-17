@@ -1,4 +1,4 @@
-import { Errors } from 'cs544-js-utils';
+import * as E from './errors.js';
 export default async function runTestSuites(descr, suites) {
     const testCaseInfos = [];
     let output = `# ${descr}\n\n`;
@@ -27,7 +27,8 @@ export default async function runTestSuites(descr, suites) {
             }
         }
         catch (err) {
-            return Errors.errResult(`error running testsuite ${suiteName}: ${err}`);
+            const msg = `error running testsuite ${suiteName}: ${err}`;
+            return E.errResult(E.Err.err(msg));
         }
     }
     output += `**Total**: ${nFailedAcc}/${nTotalAcc} failures \n`;
@@ -35,7 +36,7 @@ export default async function runTestSuites(descr, suites) {
         output += `tests aborted on failing test suite ${abortSuite}`;
     }
     const gradescopeResults = makeGradescopeResults(output, testCaseInfos);
-    return Errors.okResult(gradescopeResults);
+    return E.okResult(gradescopeResults);
 }
 function makeGradescopeResults(output, testCaseInfos) {
     return {
