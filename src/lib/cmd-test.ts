@@ -94,7 +94,7 @@ class CmdTest implements TestCase {
 
 const TIMEOUT_MILLIS = 2000;
 
-type ExecOpts = { timeout: number };
+type ExecOpts = { timeout?: number };
 function makeExecOpts(opts: CmdTestInput) : ExecOpts {
   return {
     timeout: opts.timeoutMillis ?? TIMEOUT_MILLIS,

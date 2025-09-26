@@ -32,7 +32,7 @@ async function doTestCaseWithTimeout(testCase, opts, timeoutMillis) {
         const testPromise = new Promise(async (resolve) => resolve(await testCase.run(opts)));
         const timeoutPromise = new Promise(resolve => {
             const timeoutMsg = `timeout of ${timeoutMillis} millis exceeded running ${opts.name}`;
-            const timeoutError = E.errResult(timeoutMsg);
+            const timeoutError = E.errResult(E.Err.err(timeoutMsg));
             timer = setTimeout(resolve, timeoutMillis, timeoutError);
         });
         return await Promise.race([testPromise, timeoutPromise]);

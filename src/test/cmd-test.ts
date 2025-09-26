@@ -79,6 +79,16 @@ describe('command tests without diffs', () => {
     expect(result.val.score).to.equal(score);
   });
 
+  it.skip('must fail for a slow command', async () => {
+    const test = makeTest('sleep 10',
+			  { name: 'sleep 10', timeoutMillis: 1000, });
+    const result = await test.run({});
+    assert(result.isOk);
+    console.log(result.val);
+    expect(result.val.status).to.equal('failed');
+    expect(result.val.score).to.equal(0);
+  });
+
 
 });
 

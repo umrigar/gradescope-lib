@@ -47,7 +47,7 @@ async function doTestCaseWithTimeout(testCase: TestCase, opts: TestSuiteOpts,
       new Promise(resolve => {
 	const timeoutMsg =
 	  `timeout of ${timeoutMillis} millis exceeded running ${opts.name}`;	
-	const timeoutError = E.errResult(timeoutMsg);
+	const timeoutError = E.errResult(E.Err.err(timeoutMsg));
    	timer = setTimeout(resolve, timeoutMillis, timeoutError);
       });
     return await Promise.race([testPromise, timeoutPromise]);
@@ -56,6 +56,38 @@ async function doTestCaseWithTimeout(testCase: TestCase, opts: TestSuiteOpts,
     if (timer!) clearTimeout(timer);
   }
 }
+
+/*
+function makeTimeoutPromise(opts: TestSuiteOpts, timeoutMillis: number)
+  : Promise<E.Result<TestCaseInfo, E.Err>>
+{
+  //should be ReturnType<typeof setTimeout>, but ts insisting on number
+  //when third argument passed to setTimeout()
+  let timer: number;
+  try {
+    const name = opts.name;
+    const promise: Promise<E.Result<TestCaseInfo, E.Err>> =
+      new Promise(resolve => { 
+	const timeoutMsg =
+	  `timeout of ${timeoutMillis} millis exceeded running ${name}`;	
+	const timeoutResult = E.okResult({
+	  score: 0.0,
+	  status: 'failed',
+	  name: opts.name,
+	  number: opts.number,
+	  output: timeoutMsg,
+	  stdout: '',
+	  stderr: '',
+	});
+	timer = setTimeout(resolve, timeoutMillis, timeoutResult);
+      });
+    return promise;
+  }
+  finally {
+    if (timer!) clearTimeout(timer);
+  }
+}
+*/
 
 export interface TestCase {
 
