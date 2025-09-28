@@ -21,20 +21,6 @@ makeNodeTestSuite(projectBaseDir: string,
 }
 
 
-type NodeTestCase = {
-  name: string,
-  time: number,
-  failure?: {
-    type: 'testCodeFailure'
-    message: string,
-  }[],
-  skipped?: {
-    type: 'skipped'|'todo',
-    message: string,
-  }[],
-};
-
-
 class NodeTestSuite extends BaseTypes.TestSuite {
   readonly projectBaseDir: string;
   readonly testPath: string;
