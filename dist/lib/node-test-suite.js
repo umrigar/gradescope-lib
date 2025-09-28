@@ -52,7 +52,7 @@ class NodeTestSuite extends BaseTypes.TestSuite {
         }
         else { //isTestCase
             console.assert(testOut.name !== undefined);
-            const name = (labels ? ': ' : '') + testOut.name;
+            const name = (labels ? `${labels}: ` : '') + testOut.name;
             const status = (testOut.failure || testOut.skipped) ? 'failed' : 'passed';
             const output = //clumsy array access due to input format
              (status === 'passed')
@@ -64,7 +64,7 @@ class NodeTestSuite extends BaseTypes.TestSuite {
             const extra_data = { nodeTest: testOut };
             const testN = (infos.length + 1).toString();
             const output_format = 'md';
-            infos.push({ name, status, output, output_format, score: 10,
+            infos.push({ name, status, output, output_format, score,
                 extra_data, 'number': testN });
         }
     }
@@ -86,7 +86,7 @@ function makeNodeTestCase(projectBaseDir, testPath, opts) {
 // run this file using node dist/lib/node-test-suite.js with a single
 // argument giving the path to a file containing node-test output in
 // junit XML format.
-const DO_CLI_TEST = false;
+const DO_CLI_TEST = true;
 if (DO_CLI_TEST) {
     async function cliTest() {
         const testPath = process.argv[2];
