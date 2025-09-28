@@ -86,7 +86,7 @@ function makeNodeTestCase(projectBaseDir, testPath, opts) {
 // run this file using node dist/lib/node-test-suite.js with a single
 // argument giving the path to a file containing node-test output in
 // junit XML format.
-const DO_CLI_TEST = true;
+const DO_CLI_TEST = false;
 if (DO_CLI_TEST) {
     async function cliTest() {
         const testPath = process.argv[2];
