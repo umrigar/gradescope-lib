@@ -62,10 +62,8 @@ class NodeTestSuite extends BaseTypes.TestSuite {
                     : testOut.skipped[0].type;
             const score = (status === 'passed') ? (this.opts.max_score ?? 0.0) : 0.0;
             const extra_data = { nodeTest: testOut };
-            const testN = (infos.length + 1).toString();
             const output_format = 'md';
-            infos.push({ name, status, output, output_format, score,
-                extra_data, 'number': testN });
+            infos.push({ name, status, output, output_format, score, extra_data });
         }
     }
 }
